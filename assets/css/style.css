@@ -1,0 +1,68 @@
+* {
+    outline: 1px solid red !important;
+   }
+
+body {
+    background-color:black;
+    height: 100%;
+    width: 100%;
+    }
+
+.headpic {
+    width: 66%;
+    height: 120px;
+    margin-left: 17%;
+    }
+
+.main {
+    border-style: solid;
+    border-color: white;
+    border-width: 1px;
+    height: 700px;
+    }
+
+.split1 {
+    border-width: 1px;
+    border-right-color: white;
+    border-right-style: solid;
+    height: 600px;
+    }
+
+#wordtoguess {
+    color:white;
+}
+
+# alreadyguessed
+{
+    color:white;
+}
+#lettersguessed
+{
+    color:white;
+}
+
+#alreadyguessed
+{
+    color:white;
+}
+#message {
+    color:white;
+}
+#stats {
+    color:white;
+}
+#stats2 {
+    color:white;
+}
+#hint {
+    color:white;
+}
+
+#guesses {
+    color:white;
+}
+
+#start {
+    height: 50px;
+    width: 50px;
+}
