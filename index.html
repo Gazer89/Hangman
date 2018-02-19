@@ -16,6 +16,8 @@
 
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 
+    <link href="https://fonts.googleapis.com/css?family=Black+Ops+One|Bungee+Inline|Press+Start+2P|Six+Caps|Syncopate" rel="stylesheet">
+
 </head>
 
 <body>
@@ -27,45 +29,60 @@
     </header>
 
     <div class="container-fluid">
+
         <div class="row">
             <div class="col-sm-2">
             </div>
 
-            <div class="col-sm-8">
-                <h1>Welcome</h1>
+            <div class="col-sm-8 main">
+                <h1>Test You BigBang Knowledge, Press the Play Button to Begin</h1>
+                <div class="row guess">
+                        <div id="message">
+                        </div>
+            
+                        <div id="guessword">
+                        </div>
+                    </div>
+
                 <div class="col-sm-6 split1">
-                    <img id="start" src="assets/images/start.png" alt="My Picture">
-                    <div id="wordtoguess">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        <img id="start" src="assets/images/start.png" alt="My Picture">
+                        </div>
+
+                        <div class="col-sm-6">
+                        <button onclick="hint()" id="hint">Hint</button>
+                        
+                        </div>
+
                     </div>
-
-
-                    <div id="message">
-
-                    </div>
-
-                    <div id="character">
-
-                    </div>
-
-                    <button onclick="hint()">Hint</button>
+                    <!-- <button onclick="hint()">Hint</button>
                     <p id="hint"></p>
+                    <p id="restart"></p> -->
+
+                    <div id="hangman" >
+                    </div>
 
 
                 </div>
                 <div class="col-sm-6 split2">
+                    
+                    <div id="lettersguessed">
+                    </div>
+    
+                    <div id="alreadyguessed">
+                    </div>
+
                     <div id="stats">
                         <div id="guesses" onkeypress="decreseguesses()">
                         </div>
                     </div>
+
                     <div id="stats2">
+                    </div>
+                    <div id="character">
+                    </div>
 
-                    </div>
-                    <div id="lettersguessed">
-                    
-                    </div>
-                    <div id="alreadyguessed">
-
-                    </div>
                 </div>
             </div>
 
@@ -84,187 +101,236 @@
     <script>
 
         var wins = 0;
-        document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
         var lettersguessed = [];
-        //var letterg = lettersguessed;
-        document.getElementById("lettersguessed").innerHTML = ("Letters already guessed: " + lettersguessed);
-
-        //console.log(lettersguessed);
         var useableletters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "v", "t", "u", "v", "w", "x", "y", "z"];
-
         var wordlist = [
             "bazinga",
             "physicist",
             "waitress",
-            "neurobiologist",
+            "monkey",
             "engineer"
         ];
-
-        var wordlist = wordlist[Math.floor(Math.random() * wordlist.length)]; //pick random word from list
+        var guessword = [];
         var answer = []; //hold blanks to input letter 
-        var lettersleft = wordlist.length; //letters that are still blanks
-        console.log("letters left: " + lettersleft);
-        //var selectedletters = [];
+        var lettersleft = ""; //letters that are still blanks
         var correct = answer;
+        var correctholder = [];
+        var wronganswer = 0;
+        var wrong = [];
+        var guesses = "";
 
-        var guesses = wordlist.length + 8;
-        document.getElementById("guesses").innerHTML = ("Guesses Left: " + guesses);
 
 
         // start game display blanks to enter letters 
         document.getElementById("start").addEventListener("click", begin);
 
+
         function begin() {
             var start = event.keyCode;
-
+            document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman1.jpg">';
+            guessword = wordlist[Math.floor(Math.random() * wordlist.length)]; //pick random word from list
+            guesses = guessword.length + 7;
+            lettersleft = guessword.length;
+            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
+            document.getElementById("lettersguessed").innerHTML = ("Letters already guessed: " + lettersguessed);
+            document.getElementById("guesses").innerHTML = ("Guesses Left: " + guesses);
             document.getElementById("message").innerHTML = "Pick a Letter";
             document.getElementById("character").innerHTML = " ";
             document.getElementById("lettersguessed").innerHTML = ("Letters already guessed: ");
-            document.getElementById("hint").innerHTML = (" ")
-
-            if (start == 13) {
-                console.log(start);
-            }
-
-            for (var i = 0; i < wordlist.length; i++) {
-                answer[i] = " _ ";
-                document.getElementById("wordtoguess").innerHTML = answer;
-                console.log(wordlist);
+         
+            for (var i = 0; i < guessword.length; i++) {
+                answer[i] =  "  _  " ;
+                document.getElementById("guessword").innerHTML = answer;
             }
         }
 
-
         document.onkeypress = function (event) {
-
             var guess = event.key;
-
             var alreadyguessed = lettersguessed.indexOf(guess);
-
             //check if letter already guessed 
             if (alreadyguessed === -1) {
-                console.log("alreadyguessed" + alreadyguessed);
                 lettersguessed.push(guess);
-                console.log(lettersguessed.indexOf(guess));
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
                 document.getElementById("lettersguessed").innerHTML = ("Letters already guessed: " + lettersguessed + ", ");
-                console.log(lettersguessed);
-                console.log(guess);
             }
             if (alreadyguessed !== -1) {
-                document.getElementById("alreadyguessed").innerHTML = "That letter has already been guessed, please select another";
-                console.log("already guessed");
+                // setTimeout(function(){ document.getElementById("lettersguessed").innerHTML = "That letter has already been guessed, please select another"; }, -3000);
             }
 
-            // stats
-            if (guesses === 0) {
-                document.getElementById("message").innerHTML = " You lost, press the play buttton to try again";
-                guesses = wordlist.length + 8;
+            //check if letter pressed is in word 
+            for (var g = 0; g < guessword.length; g++) {
+                if (guessword[g] === guess) {
+                    correct[g] = guess;
+                    lettersleft -= 1;
+                    correctholder.push(guess);
+                    document.getElementById("guessword").innerHTML = correct.join();
+                    document.getElementById("message").innerHTML = "You got one,keep going";
+                }
+            }
+
+
+            var checkletter = guessword.indexOf(guess);
+            if (checkletter != -1) {
+                correctholder.push(guess);
+            }
+
+            else if (checkletter === -1) {
+                wronganswer += 1;
+                document.getElementById("message").innerHTML = "That letter is not in the word, please try again";
+                wrongswf.play();
+                
+            }
+
+                if (wronganswer === 1) {
+                document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman2.jpg">';
+                }
+                if (wronganswer === 2) {
+                    document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman3.jpg">';
+                }
+                if (wronganswer === 3) {
+                    document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman4.jpg">';
+                }
+                if (wronganswer === 4) {
+                    document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman5.jpg">';
+                }
+                if (wronganswer === 5) {
+                    document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman6.jpg">';
+                }
+                if (wronganswer === 6) {
+                    document.getElementById("hangman").innerHTML = '<img id="hangman" src="assets/images/hangman7.jpg">';
+                    document.getElementById("message").innerHTML = " You lost, press the play button to try again.";
+                    wins = 0;
+                }
+
+            /// got the word right and move on to the next word    
+            if (lettersleft === 0 && guessword == "bazinga") {
+                document.getElementById("character").innerHTML = '<img id="character" src="assets/images/sheldon.jpg">';
+                bazinga.play();
+            }
+
+
+            if (lettersleft === 0 && guessword == "physicist") {
+                document.getElementById("character").innerHTML = '<img id="character" src="assets/images/shelandlen.jpg">';
+                len.play();
+            }
+
+            if (lettersleft === 0 && guessword == "waitress") {
+                document.getElementById("character").innerHTML = '<img id="character" src="assets/images/penny.jpg">';
+                penny.play();
+            }
+
+            if (lettersleft === 0 && guessword == "monkey") {
+                document.getElementById("character").innerHTML = '<img id="character" src="assets/images/amy.jpg">';
+                cra.play();
+            }
+            if (lettersleft === 0 && guessword == "engineer") {
+                document.getElementById("character").innerHTML = '<img id="character" src="assets/images/waliwizt.jpg">';
+                walo.play();
+            }
+
+            if (lettersleft === 0 && guessword == "engineer" || lettersleft === 0 && guessword == "neurobiologist" || lettersleft === 0 && guessword == "bazinga" || lettersleft === 0 && guessword == "physicist" || lettersleft === 0 && guessword == "waitress") {
+                wins++;
+                document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
+                document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
+                guessword = [];
+                answer = []; //hold blanks to input letter 
+                lettersleft = ""; //letters that are still blanks
+                lettersguessed = [];
+                correctholder = [];
+                correct = answer;
+                wronganswer = 0;
+                wrong = [];
+                guesses = "";
             }
 
             if (wins === 5) {
-                document.getElementById("message").innerHTML = "You beat the game, your a BigBang Theory Wiz!!";
-                document.getElementById("character").innerHTML = '<img id="start" src="assets/images/bang2.jpg">';
+            document.getElementById("message").innerHTML = "You beat the game, your a BigBang Theory Wiz!!";
+            document.getElementById("character").innerHTML = '<img id="character" src="assets/images/bang2.jpg">';
+            bang.play();
+                guessword = [];
+                answer = []; //hold blanks to input letter 
+                lettersleft = ""; //letters that are still blanks
+                lettersguessed = [];
+                correctholder = [];
+                correct = answer;
+                wronganswer = 0;
+                wrong = [];
+                guesses = "";
             }
 
 
-            //check if letter pressed is in word 
-            for (var g = 0; g < wordlist.length; g++) {
-                //check if the letter typed by use is in the currently hiden word
-                if (wordlist[g] === guess) {
-                    correct[g] = guess;
-                    lettersleft -= 1;
-                    console.log("letters left: " + lettersleft);
-                    document.getElementById("wordtoguess").innerHTML = correct.join();
-                    document.getElementById("message").innerHTML = "You got one, keep going";
-                    console.log(correct);
-                    console.log(lettersguessed);
-                }
-
-            }
-
-        /// got the word right and move on to the next word    
-        if (lettersleft === 0 && wordlist == "bazinga") {
-            document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
-            document.getElementById("character").innerHTML = '<img id="start" src="assets/images/sheldon.jpg">';
-            wins ++;
-            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
-            console.log("wins" + wins)
         }
-
-
-        if (lettersleft === 0 && wordlist == "physicist") {
-            document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
-            document.getElementById("character").innerHTML = '<img id="start" src="assets/images/shelandlen.jpg">';
-            wins ++;
-            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
-            console.log("wins" + wins)
-        }
-        
-        if (lettersleft === 0 && wordlist == "waitress") {
-            document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
-            document.getElementById("character").innerHTML = '<img id="start" src="assets/images/penny.jpg">';
-            wins ++;
-            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
-            console.log("wins" + wins)
-        }
-
-        if (lettersleft === 0 && wordlist == "neurobiologist") {
-            document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
-            document.getElementById("character").innerHTML = '<img id="start" src="assets/images/amy.jpg">';
-            wins ++;
-            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
-            console.log("wins" + wins)
-        }
-
-        if (lettersleft === 0 && wordlist == "engineer") {
-            document.getElementById("message").innerHTML = "You got it, press the play buttton for the next word.";
-            document.getElementById("character").innerHTML = '<img id="start" src="assets/images/wallwizt.jpg">';
-            wins ++;
-            document.getElementById("stats2").innerHTML = ("Correct Words: " + wins);
-            console.log("wins" + wins)
-        }
-
-        if (guess === wordlist[g]) {
-            //lettersleft -= 1;
-            document.getElementById("message").innerHTML = "That letter is not in the word try again";
-        }
-                                
-    }              
-                        
-                
 
         // user wants some help with the word and will lose a guess 
         function hint() {
 
-            if (wordlist == "bazinga") {
-                document.getElementById("hint").innerHTML = "One of sheldons favorite 'got you words'";
+            if (guessword == "bazinga") {
+                document.getElementById("message").innerHTML = "One of sheldons favorite 'got you words'";
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
             }
 
-            if (wordlist == "physicist") {
-                document.getElementById("hint").innerHTML = "Lenard and Sheldond field of study";
+            if (guessword == "physicist") {
+                document.getElementById("message").innerHTML = "Lenard and Sheldond field of study";
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
             }
 
-            if (wordlist == "waitress") {
-                document.getElementById("hint").innerHTML = "Pennys day job";
+            if (guessword == "waitress") {
+                document.getElementById("message").innerHTML = "Pennys day job";
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
             }
 
-            if (wordlist == "neurobiologist") {
-                document.getElementById("hint").innerHTML = "Amy's field of study";
+            if (guessword == "monkey") {
+                document.getElementById("message").innerHTML = "Amy's has this type of test animal in her lab";
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
             }
 
-            if (wordlist == "engineer") {
-                document.getElementById("hint").innerHTML = "Waliwizt's field of study";
+            if (guessword == "engineer") {
+                document.getElementById("message").innerHTML = "Waliwizt's field of study";
                 document.getElementById("guesses").innerHTML = ("Guesses Left: " + (guesses -= 1));
             }
         }
 
+                    // console.log("guessword " + guessword)
+                    // console.log("answer " + answer)
+                    // console.log("lettersleft " + lettersleft)
+                    // console.log("lettersguessed " + lettersguessed)
+                    // console.log("correctholder " + correctholder)
+                    // console.log("wronganswer " + wronganswer)
+                    // console.log("wrong " + wrong)
+                    // console.log("guesses " + guesses)
+                    // console.log("answer " + answer)
+                    // console.log("correct " + correct)
+                    // console.log("wins" + wins)
+                    // console.log("message" + message)
+                    // console.log("next" + next)
+                    // console.log("character" + character)
+                    // console.log("stats2" + stats2)
+
 
 
     </script>
+
+    <audio id="penny">
+        <source src="assets/images/penny.mp3" type="audio/mp3">
+    </audio>
+    <audio id="bazinga">
+            <source src="assets/images/bazinga_1.mp3" type="audio/mp3">
+    </audio>
+    <audio id="cra">
+            <source src="assets/images/cra.mp3" type="audio/mp3">
+    </audio>
+    <audio id="walo">
+            <source src="assets/images/walo.mp3" type="audio/mp3">
+    </audio>
+    <audio id="len">
+            <source src="assets/images/len.mp3" type="audio/mp3">
+    </audio>
+    <audio id="bang">
+            <source src="assets/images/bang.mp3" type="audio/mp3">
+    </audio>
+    <audio id="wrongswf">
+            <source src="assets/images/wrong.swf.mp3" type="audio/mp3">
+    </audio>
 
 </body>
 
